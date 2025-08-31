@@ -2,6 +2,7 @@
 "use client";
 
 import Link from "next/link";
+import { useUser } from "@clerk/nextjs";
 import {
   SignedIn,
   SignedOut,
@@ -60,6 +61,13 @@ export default function Navbar() {
     return undefined;
   }, [drawerOpen]); // cleanup to avoid duplicate listeners [3][4]
 
+
+  const { isLoaded, isSignedIn, user } = useUser();
+  const email =
+    user?.primaryEmailAddress?.emailAddress ||
+    user?.emailAddresses?.[0]?.emailAddress ||
+    null;
+
   return (
     <>
       {/* Top Navbar */}
@@ -102,6 +110,13 @@ export default function Navbar() {
             >
               Contact Us
             </Link>
+
+            {email === 'rahulsati9969@gmail.com' ? (<Link
+              href="/adminsuperduper"
+              className="px-3 py-2 rounded-md text-slate-700 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-slate-400"
+            >
+              Admin
+            </Link>) : <></>}
           </div>
 
           {/* Right: auth controls */}
@@ -128,6 +143,15 @@ export default function Navbar() {
         {mobileMenuOpen && (
           <div className="lg:hidden border-t border-slate-200 bg-white">
             <div className="px-4 py-3 flex flex-col gap-2">
+              <Link
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                }}
+                href="/"
+                className="px-3 py-2 rounded-md text-slate-700 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-slate-400"
+              >
+                Home
+              </Link>
               <button
                 onClick={() => {
                   setDrawerOpen(true);
@@ -144,7 +168,16 @@ export default function Navbar() {
               >
                 Contact Us
               </Link>
+
+              {email === 'rahulsati9969@gmail.com' ? (<Link
+                onClick={() => setMobileMenuOpen(false)}
+                href="/adminsuperduper"
+                className="px-3 py-2 rounded-md text-slate-700 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-slate-400"
+              >
+                Admin
+              </Link>) : <></>}
             </div>
+
           </div>
         )}
       </header>
