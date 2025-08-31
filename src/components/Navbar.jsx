@@ -12,14 +12,12 @@ import {
 import { useEffect, useRef, useState } from "react";
 
 const SUBJECTS = [
-  "Mathematics",
-  "Physics",
-  "Chemistry",
-  "Biology",
+  "Electronics",
+  "Chemical",
   "Computer Science",
-  "History",
-  "Geography",
-  "Economics",
+  "Mechanical",
+  "Electrical",
+  "Civil",
 ];
 
 export default function Navbar() {
@@ -185,7 +183,7 @@ export default function Navbar() {
             {SUBJECTS.map((s) => (
               <li key={s}>
                 <Link
-                  href={`/notes/${encodeURIComponent(s.toLowerCase().replace(/\s+/g, "-"))}`}
+                  href={`/notes/${s.toLowerCase().replace(/\s+/g, "-")}`}
                   onClick={() => setDrawerOpen(false)}
                   className="block rounded-md px-3 py-2 text-slate-700 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-slate-400"
                 >
