@@ -11,14 +11,15 @@ import {
   UserButton,
 } from "@clerk/nextjs";
 import { useEffect, useRef, useState } from "react";
+import { BookOpen, Home, Mail, Settings, X, Menu } from "lucide-react";
 
 const SUBJECTS = [
-  "Electronics",
-  "Chemical",
-  "Computer Science",
-  "Mechanical",
-  "Electrical",
-  "Civil",
+  { name: "Electronics", icon: "💡" },
+  { name: "Chemical", icon: "⚗️" },
+  { name: "Computer Science", icon: "💻" },
+  { name: "Mechanical", icon: "⚙️" },
+  { name: "Electrical", icon: "🔌" },
+  { name: "Civil", icon: "🏗️" },
 ];
 
 export default function Navbar() {
@@ -27,7 +28,7 @@ export default function Navbar() {
   const drawerRef = useRef(null);
   const firstFocusableRef = useRef(null);
 
-  // Close on Escape and move focus into the drawer when opened
+  // Escape close
   useEffect(() => {
     function onKeyDown(e) {
       if (e.key === "Escape") {
@@ -43,10 +44,9 @@ export default function Navbar() {
         document.removeEventListener("keydown", onKeyDown);
       };
     }
-    return undefined;
-  }, [drawerOpen, mobileMenuOpen]); // attach only while open [3][4]
+  }, [drawerOpen, mobileMenuOpen]);
 
-  // Click outside to close drawer
+  // Outside click close
   useEffect(() => {
     function onClick(e) {
       if (!drawerRef.current) return;
@@ -58,11 +58,9 @@ export default function Navbar() {
       document.addEventListener("mousedown", onClick);
       return () => document.removeEventListener("mousedown", onClick);
     }
-    return undefined;
-  }, [drawerOpen]); // cleanup to avoid duplicate listeners [3][4]
+  }, [drawerOpen]);
 
-
-  const { isLoaded, isSignedIn, user } = useUser();
+  const { user } = useUser();
   const email =
     user?.primaryEmailAddress?.emailAddress ||
     user?.emailAddresses?.[0]?.emailAddress ||
@@ -71,21 +69,23 @@ export default function Navbar() {
   return (
     <>
       {/* Top Navbar */}
-      <header className="fixed inset-x-0 top-0 z-50 bg-white/80 backdrop-blur border-b border-slate-200">
+      <header className="fixed inset-x-0 top-0 z-50 bg-white/80 backdrop-blur border-b border-slate-200 shadow-sm">
         <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          {/* Left: brand + hamburger */}
+          {/* Left: logo + brand */}
           <div className="flex items-center gap-3">
             <button
               aria-label="Open menu"
-              className="lg:hidden inline-flex items-center justify-center p-2 rounded-md text-slate-700 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-slate-400"
+              className="lg:hidden inline-flex items-center justify-center p-2 rounded-md text-slate-700 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-400"
               onClick={() => setMobileMenuOpen((v) => !v)}
             >
-              <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-              </svg>
+              <Menu className="h-6 w-6" />
             </button>
 
-            <Link href="/" className="font-semibold text-xl tracking-tight">
+            <Link
+              href="/"
+              className="flex items-center gap-2 font-semibold text-xl tracking-tight text-indigo-700 hover:scale-105 transition-transform"
+            >
+              <BookOpen className="h-6 w-6 text-indigo-600" />
               Core Notes
             </Link>
           </div>
@@ -94,41 +94,43 @@ export default function Navbar() {
           <div className="hidden lg:flex items-center gap-6">
             <Link
               href="/"
-              className="px-3 py-2 rounded-md text-slate-700 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-slate-400"
+              className="px-3 py-2 rounded-md text-slate-700 hover:bg-indigo-50 hover:text-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-400"
             >
               Home
             </Link>
             <button
               onClick={() => setDrawerOpen(true)}
-              className="px-3 py-2 rounded-md text-slate-700 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-slate-400"
+              className="px-3 py-2 rounded-md text-slate-700 hover:bg-indigo-50 hover:text-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-400"
             >
               Notes
             </button>
             <Link
               href="/contact"
-              className="px-3 py-2 rounded-md text-slate-700 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-slate-400"
+              className="px-3 py-2 rounded-md text-slate-700 hover:bg-indigo-50 hover:text-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-400"
             >
               Contact Us
             </Link>
 
-            {email === 'rahulsati9969@gmail.com' ? (<Link
-              href="/adminsuperduper"
-              className="px-3 py-2 rounded-md text-slate-700 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-slate-400"
-            >
-              Admin
-            </Link>) : <></>}
+            {email === "rahulsati9969@gmail.com" && (
+              <Link
+                href="/adminsuperduper"
+                className="px-3 py-2 rounded-md text-red-600 hover:bg-red-50 hover:text-red-700 focus:outline-none focus:ring-2 focus:ring-red-400"
+              >
+                Admin
+              </Link>
+            )}
           </div>
 
           {/* Right: auth controls */}
           <div className="flex items-center gap-3">
             <SignedOut>
               <SignInButton mode="modal">
-                <button className="px-3 py-2 rounded-md text-slate-700 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-slate-400">
+                <button className="px-3 py-2 rounded-md text-slate-700 hover:bg-indigo-50 hover:text-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-400">
                   Sign In
                 </button>
               </SignInButton>
               <SignUpButton mode="modal">
-                <button className="bg-[#6c47ff] text-white rounded-full font-medium text-sm h-10 px-4 hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-[#6c47ff]/60">
+                <button className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-full font-medium text-sm h-10 px-4 shadow-md hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-indigo-400">
                   Sign Up
                 </button>
               </SignUpButton>
@@ -141,14 +143,12 @@ export default function Navbar() {
 
         {/* Mobile dropdown */}
         {mobileMenuOpen && (
-          <div className="lg:hidden border-t border-slate-200 bg-white">
+          <div className="lg:hidden border-t border-slate-200 bg-white animate-slide-down">
             <div className="px-4 py-3 flex flex-col gap-2">
               <Link
-                onClick={() => {
-                  setMobileMenuOpen(false);
-                }}
                 href="/"
-                className="px-3 py-2 rounded-md text-slate-700 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-slate-400"
+                onClick={() => setMobileMenuOpen(false)}
+                className="px-3 py-2 rounded-md text-slate-700 hover:bg-indigo-50 hover:text-indigo-700"
               >
                 Home
               </Link>
@@ -157,27 +157,27 @@ export default function Navbar() {
                   setDrawerOpen(true);
                   setMobileMenuOpen(false);
                 }}
-                className="px-3 py-2 rounded-md text-slate-700 hover:bg-slate-100 text-left"
+                className="px-3 py-2 rounded-md text-slate-700 hover:bg-indigo-50 hover:text-indigo-700 text-left"
               >
                 Notes
               </button>
               <Link
                 href="/contact"
                 onClick={() => setMobileMenuOpen(false)}
-                className="px-3 py-2 rounded-md text-slate-700 hover:bg-slate-100"
+                className="px-3 py-2 rounded-md text-slate-700 hover:bg-indigo-50 hover:text-indigo-700"
               >
                 Contact Us
               </Link>
-
-              {email === 'rahulsati9969@gmail.com' ? (<Link
-                onClick={() => setMobileMenuOpen(false)}
-                href="/adminsuperduper"
-                className="px-3 py-2 rounded-md text-slate-700 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-slate-400"
-              >
-                Admin
-              </Link>) : <></>}
+              {email === "rahulsati9969@gmail.com" && (
+                <Link
+                  onClick={() => setMobileMenuOpen(false)}
+                  href="/adminsuperduper"
+                  className="px-3 py-2 rounded-md text-red-600 hover:bg-red-50 hover:text-red-700"
+                >
+                  Admin
+                </Link>
+              )}
             </div>
-
           </div>
         )}
       </header>
@@ -185,7 +185,9 @@ export default function Navbar() {
       {/* Drawer overlay */}
       <div
         aria-hidden={!drawerOpen}
-        className={`fixed inset-0 z-40 transition-colors ${drawerOpen ? "bg-black/30" : "pointer-events-none bg-transparent"}`}
+        className={`fixed inset-0 z-40 transition-colors ${
+          drawerOpen ? "bg-black/40 backdrop-blur-sm" : "pointer-events-none bg-transparent"
+        }`}
         onClick={() => setDrawerOpen(false)}
       />
 
@@ -194,33 +196,35 @@ export default function Navbar() {
         ref={drawerRef}
         role="dialog"
         aria-modal="true"
-        className={`fixed inset-y-0 left-0 z-50 w-80 max-w-[85vw] transform bg-white shadow-xl border-r border-slate-200 transition-transform duration-300 ease-in-out ${drawerOpen ? "translate-x-0" : "-translate-x-full"
-          }`}
+        className={`fixed inset-y-0 left-0 z-50 w-80 max-w-[85vw] transform bg-white shadow-xl border-r border-slate-200 transition-transform duration-300 ease-in-out ${
+          drawerOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
       >
-        <div className="h-16 flex items-center justify-between px-4 border-b border-slate-200">
-          <h2 className="font-semibold text-lg">Subjects</h2>
+        <div className="h-16 flex items-center justify-between px-4 border-b border-slate-200 bg-gradient-to-r from-indigo-600 to-purple-600 text-white">
+          <h2 className="font-semibold text-lg flex items-center gap-2">
+            📚 Subjects
+          </h2>
           <button
             ref={firstFocusableRef}
             onClick={() => setDrawerOpen(false)}
-            className="p-2 rounded-md text-slate-700 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-slate-400"
+            className="p-2 rounded-md hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white"
             aria-label="Close subjects drawer"
           >
-            <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path d="M6 18L18 6M6 6l12 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-            </svg>
+            <X className="h-5 w-5" />
           </button>
         </div>
 
         <div className="p-4">
           <ul className="space-y-2">
             {SUBJECTS.map((s) => (
-              <li key={s}>
+              <li key={s.name}>
                 <Link
-                  href={`/notes/${s.toLowerCase().replace(/\s+/g, "-")}`}
+                  href={`/notes/${s.name.toLowerCase().replace(/\s+/g, "-")}`}
                   onClick={() => setDrawerOpen(false)}
-                  className="block rounded-md px-3 py-2 text-slate-700 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-slate-400"
+                  className="flex items-center gap-3 rounded-md px-3 py-2 text-slate-700 hover:bg-indigo-50 hover:text-indigo-700 transition-all"
                 >
-                  {s}
+                  <span className="text-lg">{s.icon}</span>
+                  {s.name}
                 </Link>
               </li>
             ))}
